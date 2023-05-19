@@ -7,7 +7,7 @@ Algorithm
 Tkinter app Login Page
 <br><img width="481" alt="image" src="https://github.com/HARSHIL00-7/Image-Encryption-using-chaotic-maps/assets/74018905/3dedc3b6-2be8-4da8-8667-a937fa032aa6">
 
-<br<h2>Lenna Standard Image</h2>
+<br><h2>Lenna Standard Image</h2>
 <h3>Tkinter GUI </h3>
 <br><img width="481" alt="image" src="https://github.com/HARSHIL00-7/Image-Encryption-using-chaotic-maps/assets/74018905/619a10d2-c354-4c0d-9bfb-da7fbe3c112b">
 <br><h3>Histograms</h3>
