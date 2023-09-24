@@ -57,7 +57,7 @@ def chaotic_decrypt(img_array, key):
 
 
 # read image
-img = Image.open('lenna.png')
+img = Image.open('Lenna.png')
 img_array = np.array(img)
 rows, cols, channels = img_array.shape
 key = np.array([0.1, 0.2, 0.3])
