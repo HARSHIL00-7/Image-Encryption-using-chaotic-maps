@@ -5,13 +5,16 @@ import matplotlib.pyplot as plt
 def logistic_map(x, r):
     return r * x * (1 - x)
 
+# function to perform chaotic encryption
 def chaotic_encrypt(img_array, key):
+    # set initial conditions
     x, y, z = key
     for i in range(100):
         x = logistic_map(x, 3.8)
         y = logistic_map(y, 3.9)
         z = logistic_map(z, 4.0)
 
+    # perform encryption
     encrypted_img = np.zeros_like(img_array)
     rows, cols, channels = img_array.shape
     for i in range(rows):
@@ -27,15 +30,19 @@ def chaotic_encrypt(img_array, key):
     return encrypted_img, key
 
 
-def chaotic_decrypt(img2_array, key):
+# function to perform chaotic decryption
+# function to perform chaotic decryption
+def chaotic_decrypt(img_array, key):
+    # set initial conditions
     x, y, z = key
     for i in range(100):
         x = logistic_map(x, 3.8)
         y = logistic_map(y, 3.9)
         z = logistic_map(z, 4.0)
 
-    decrypted_img = np.zeros_like(img2_array)
-    rows, cols, channels = img2_array.shape
+    # perform decryption
+    decrypted_img = np.zeros_like(img_array)
+    rows, cols, channels = img_array.shape
     for i in range(rows):
         for j in range(cols):
             for k in range(channels):
@@ -48,40 +55,26 @@ def chaotic_decrypt(img2_array, key):
 
     return decrypted_img
 
-img = Image.open('Lenna.png')
+
+# read image
+img = Image.open('lenna.png')
 img_array = np.array(img)
 rows, cols, channels = img_array.shape
 key = np.array([0.1, 0.2, 0.3])
 
+# encrypt image
 encrypted_img, key_enc = chaotic_encrypt(img_array, key.copy())
 
 decrypted_img = chaotic_decrypt(encrypted_img, key.copy())
 
 
+# calculate NPCR and UACI
 N_diff = np.sum(encrypted_img != img_array)
 N_rows, N_cols, N_channels = img_array.shape
 NPCR = (N_diff / (N_rows * N_cols * N_channels)) * 100
 
-# Calculate UACI
-N_rows, N_cols, N_channels = img_array.shape
-uaci = 0
-for i in range(N_channels):
-    diff = np.abs(img_array[:,:,i] - encrypted_img[:,:,i])
-    uaci += np.sum(diff) / (N_rows * N_cols * 255)
-uaci /= N_channels
-print("UACI: {:.2f}%".format(uaci*100))
 
-# Calculate PSNR
-mse = np.mean((img_array - encrypted_img)**2)
-max_pixel = 255
-psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
-if mse == 0:
-    psnr = 100
-else:
-    psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
-
-print("PSNR: {:.2f} dB".format(psnr))
-
+# calculate correlation coefficient
 mu_p = np.mean(img_array)
 mu_d = np.mean(decrypted_img)
 sigma_p = np.std(img_array)
@@ -90,7 +83,23 @@ sigma_d = np.std(decrypted_img)
 CC = np.sum((img_array - mu_p) * (decrypted_img - mu_d)) / ((N_rows * N_cols * N_channels - 1) * sigma_p * sigma_d)
 
 print("NPCR: {:.2f}%".format(NPCR))
+
 print("Correlation coefficient: {:.4f}".format(CC))
+
+flat_arr = encrypted_img.flatten()
+
+# Compute the frequency of each pixel value
+hist, bin_edges = np.histogram(flat_arr, bins=256)
+
+# Normalize the histogram to prevent zero or negative values in probability array
+hist = hist / np.sum(hist + 1e-10)
+
+# Calculate the probability of each pixel value
+prob = hist / np.sum(hist)
+
+# Compute the entropy
+entropy = -np.sum(prob * np.log2(prob + 1e-10))
+print("Entropy of encrypted image:", entropy)
 
 fig, axs = plt.subplots(3, 5, figsize=(15,7))
 fig.subplots_adjust(hspace= 0.7 , wspace=0.5) 
