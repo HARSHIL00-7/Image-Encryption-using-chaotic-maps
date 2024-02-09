@@ -23,7 +23,7 @@ def chaotic_encrypt(img_array, key):
                 x = logistic_map(x, 3.8)
                 y = logistic_map(y, 3.9)
                 z = logistic_map(z, 4.0)
-                r = int(round(logistic_map(x, 3.7) * 1000)) % 256
+                r = int(round(logistic_map(x, 3.7) * 10000)) % 256
                 encrypted_img[i, j, k] = img_array[i, j, k] ^ r
                 key[k] = x
 
